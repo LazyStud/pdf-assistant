@@ -59,7 +59,7 @@ if not st.session_state.pipeline:
     st.info("👈 Upload a PDF in the sidebar to get started.")
 else:
     for msg in st.session_state.messages:
-        with st.chat_mesage(msg["role"]):
+        with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
             if "sources" in msg:
                 with st.expander("Sources"):
