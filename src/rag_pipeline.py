@@ -156,23 +156,96 @@ class RAGPipeline:
             "sources": sources
         }
     
-    def query_with_image(self, query: str, image_bytes: bytes, use_pdf_context: bool = True) -> dict:
+    def query_with_image(self, query: str, image_bytes: bytes,k: int = 3, use_pdf_context: bool = True) -> dict:
         """Read an image and answer a question about its content.
 
         Args:
             question:        Natural language question about the image.
             image_bytes:     Raw bytes of the image file (JPEG, PNG, or WEBP).
             use_pdf_context: If True and a PDF is loaded, retrieves relevant
-                             PDF chunks to supplement the image context.
+                            PDF chunks to supplement the image context.
 
         Returns:
             Dict with keys:
                 answer  (str)  — Answer generated from the image content.
                 sources (list) — PDF citations if use_pdf_context is True,
-                                 otherwise an empty list.
+                                otherwise an empty list.
         """
 
         # Encode the image to base64
         # We are using Vision API, which accepts images as base64-encoded strings. The encoding is done in-memory without saving to disk.
         image_b64 = base64. standard_b64encode(image_bytes).decode("utf-8")
+
+        # Detect the image format for the prompt (e.g., "jpeg", "png", "webp")
+        # This is a simple heuristic based on common file signatures. For production, consider using a
+        # robust library like python-magic to detect MIME types.
+        if image_bytes.startswith(b"\xff\xd8\xff"):
+            image_format = "jpeg"
+        elif image_bytes.startswith(b"\x89PNG\r\n\x1a\n"):
+            image_format = "png"
+        elif image_bytes.startswith(b"RIFF") and b"WEBP" in image_bytes[8:16]:
+            image_format = "webp"
+        else:
+            image_format = "jpeg"  # Default to jpeg if unknown
+
+        # optionally retrieve PDF context if requested and available
+        if use_pdf_context and self.collection.count() > 0:
+            q_embedding = self.embedder.encode([query]).tolist()
+            results = self.collection.query(
+                query_embeddings=q_embedding,  # type: ignore[arg-type]
+                n_results = k
+            )
+        
+            sources = results["metadatas"][0] if results["metadatas"] else []
+            context_block = (
+                "\n\nAdditional context from the uploaded PDF:\n" +
+                "\n---\n".join(results["documents"][0])
+            )
+
+
+        # Construct the prompt for the vision-capable LLM
+        prompt = """You are a helpful assistant. The user has shared an image with a question.
+
+First, carefully read ALL content visible in the image:
+- Read every word of text, headings, labels, and captions
+- If there is a chart: read the title, axis labels, legend, and key data values
+- If there is a table: read each row and column value
+- If there is code: read it line by line
+- If there is handwriting: transcribe it as accurately as possible
+- If there is a diagram: describe the components and their relationships
+
+Then use that content to answer the question accurately and completely.{context_block}
+
+Question: {query}
+
+Answer based on what you see in the image:"""
+
+        # Call the Groq LLM with the image and prompt
+        response = self.groq.chat.completions.create(
+            model="llama-3.2-90b-vision-preview",  
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/{image_format};base64,{image_b64}"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "text": prompt
+                        }
+                    ]
+                }
+            ],
+            temperature=0.1, # slightly higher than text-only — image description needs flexibility
+            max_tokens=1024, # images can contain more information, so allow a longer answer
+        )
+
+        return {
+            "answer": response.choices[0].message.content.strip(),
+            "sources": sources if use_pdf_context else []
+        }
 
