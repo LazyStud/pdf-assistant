@@ -3,3 +3,4 @@ pdfassist/
 __pycache__/
 *.pyc
 chroma_db/
+.vscode/

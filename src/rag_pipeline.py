@@ -31,7 +31,10 @@ class RAGPipeline:
 
         # In-memory ChromaDB client — no external server required
         self.chroma = chromadb.Client()
-        self.collection = self.chroma.get_or_create_collection(name="pdf_chunks")
+        self.collection = self.chroma.get_or_create_collection(
+            name="pdf_chunks",
+            metadata={"hnsw:space": "cosine"}  # cosine similarity is best for text embeddings
+        )
 
         # 500-char chunks with 50-char overlap to preserve sentence context across boundaries
         self.splitter = RecursiveCharacterTextSplitter(
@@ -152,3 +155,24 @@ class RAGPipeline:
             "answer": response.choices[0].message.content.strip(),
             "sources": sources
         }
+    
+    def query_with_image(self, query: str, image_bytes: bytes, use_pdf_context: bool = True) -> dict:
+        """Read an image and answer a question about its content.
+
+        Args:
+            question:        Natural language question about the image.
+            image_bytes:     Raw bytes of the image file (JPEG, PNG, or WEBP).
+            use_pdf_context: If True and a PDF is loaded, retrieves relevant
+                             PDF chunks to supplement the image context.
+
+        Returns:
+            Dict with keys:
+                answer  (str)  — Answer generated from the image content.
+                sources (list) — PDF citations if use_pdf_context is True,
+                                 otherwise an empty list.
+        """
+
+        # Encode the image to base64
+        # We are using Vision API, which accepts images as base64-encoded strings. The encoding is done in-memory without saving to disk.
+        image_b64 = base64. standard_b64encode(image_bytes).decode("utf-8")
+
