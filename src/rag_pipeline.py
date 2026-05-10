@@ -19,7 +19,14 @@ class RAGPipeline:
         # Groq LLM client — requires GROQ_API_KEY in .env
         self.groq = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-        # SentenceTransformer converts text to 384-dim dense vectors
+        # EMBEDDING MODEL — converts text to vectors, runs locally on CPU, no API needed
+        # Swap the model string below to change quality/speed tradeoff:
+        #   "all-MiniLM-L6-v2"                        → 90MB,  fastest,  good quality    (current)
+        #   "BAAI/bge-small-en-v1.5"                   → 130MB, fast,     better quality  (recommended upgrade)
+        #   "all-mpnet-base-v2"                        → 420MB, medium,   good quality
+        #   "BAAI/bge-large-en-v1.5"                   → 1.3GB, slow,     best quality
+        #   "paraphrase-multilingual-MiniLM-L12-v2"    → 470MB, medium,   use for non-English PDFs
+        # NOTE: whatever model you set here MUST match the one used in query() below
         self.embedder = SentenceTransformer("all-MiniLM-L6-v2")
 
         # In-memory ChromaDB client — no external server required
@@ -124,7 +131,16 @@ class RAGPipeline:
 
         Answer concisely and cite page numbers like [Page X]:"""
 
-        # Low temperature keeps answers factual and deterministic
+        # LLM MODEL — reads retrieved chunks and writes the final answer via Groq API (free)
+        # Swap the model string below — all free on console.groq.com/docs/models:
+        #   "llama-3.1-8b-instant"       → fastest,  good quality              (current)
+        #   "llama-3.3-70b-versatile"    → medium,   best quality on Groq
+        #   "mixtral-8x7b-32768"         → fast,     32k context window, good for long PDFs
+        #   "gemma2-9b-it"               → fast,     Google's model, different reasoning style
+        # To switch provider entirely, see alternatives below:
+        #   Ollama (fully local, offline): ollama.chat(model="llama3.2", ...)
+        #   Gemini Flash (Google, free):   google.generativeai model="gemini-1.5-flash"
+        #   OpenAI (paid, cheapest):       client.chat.completions model="gpt-4o-mini"
         response = self.groq.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],

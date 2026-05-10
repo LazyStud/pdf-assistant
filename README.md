@@ -58,6 +58,39 @@ streamlit run app.py
 
 Open the URL printed in the terminal (usually `http://localhost:8501`), upload a PDF in the sidebar, and start chatting.
 
+## Model options
+
+### LLM (Groq — all free)
+
+Change the `model` string in `RAGPipeline.query()` ([src/rag_pipeline.py:144](src/rag_pipeline.py#L144)):
+
+| Model | Speed | Quality | Notes |
+|---|---|---|---|
+| `llama-3.1-8b-instant` | Fastest | Good | **Default** |
+| `llama-3.3-70b-versatile` | Medium | Best on Groq | |
+| `mixtral-8x7b-32768` | Fast | Good | 32k context — good for long PDFs |
+| `gemma2-9b-it` | Fast | Good | Google's model, different reasoning style |
+
+To switch provider entirely, replace the Groq client in `RAGPipeline.__init__()`:
+
+| Provider | Notes |
+|---|---|
+| **Ollama** | Fully local, offline: `ollama.chat(model="llama3.2", ...)` |
+| **Gemini Flash** | Google, free tier: `google.generativeai` with `gemini-1.5-flash` |
+| **OpenAI** | Paid, cheapest option: `client.chat.completions` with `gpt-4o-mini` |
+
+### Embedding model (local, no API needed)
+
+Change the `SentenceTransformer` string in `RAGPipeline.__init__()` ([src/rag_pipeline.py:30](src/rag_pipeline.py#L30)). The same model string must be used in both `ingest()` and `query()`.
+
+| Model | Size | Speed | Quality | Notes |
+|---|---|---|---|---|
+| `all-MiniLM-L6-v2` | 90 MB | Fastest | Good | **Default** |
+| `BAAI/bge-small-en-v1.5` | 130 MB | Fast | Better | Recommended upgrade |
+| `all-mpnet-base-v2` | 420 MB | Medium | Good | |
+| `BAAI/bge-large-en-v1.5` | 1.3 GB | Slow | Best | |
+| `paraphrase-multilingual-MiniLM-L12-v2` | 470 MB | Medium | Good | Non-English PDFs |
+
 ## Roadmap
 
 - [ ] Image chat — upload an image and ask questions about it using a Groq vision model
