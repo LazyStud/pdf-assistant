@@ -2,7 +2,7 @@
 
 import os
 from typing import Any
-
+import base64
 from groq import Groq
 import fitz  # PyMuPDF
 from dotenv import load_dotenv
@@ -10,7 +10,7 @@ import chromadb
 from sentence_transformers import SentenceTransformer
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-load_dotenv()
+load_dotenv() # Load environment variables from .env file, including GROQ_API_KEY for authentication
 
 
 class RAGPipeline:
@@ -63,7 +63,7 @@ class RAGPipeline:
         for i in range(len(doc)):
             page_num = i + 1
             page: fitz.Page = doc[i]
-            text: str = page.get_text()
+            text: str = page.get_text()  # type: ignore[assignment]
 
             # Skip pages with no extractable text (scanned images, blank pages, etc.)
             if not text.strip():
@@ -94,6 +94,19 @@ class RAGPipeline:
 
         return len(chunks)
 
+    def _retrieve(self, query: str, k: int) -> tuple[list[dict[str, Any]], str]:
+        """Embed a query and return the top-k chunks as (sources, context_string)."""
+        embedding = self.embedder.encode([query]).tolist()
+        results = self.collection.query(
+            query_embeddings=embedding,  # type: ignore[arg-type]
+            n_results=k
+        )
+        raw_metadatas = results["metadatas"] or [[]]
+        raw_documents = results["documents"] or [[]]
+        sources: list[dict[str, Any]] = [dict(m) for m in raw_metadatas[0]]  # type: ignore[misc]
+        context = "\n\n--\n\n".join(raw_documents[0])
+        return sources, context
+
     def query(self, query: str, k: int = 4) -> dict[str, Any]:
         """Embed a user query, retrieve the most relevant chunks, and generate an LLM answer.
 
@@ -105,23 +118,7 @@ class RAGPipeline:
                 - "answer" (str): LLM-generated response with inline page citations.
                 - "sources" (list[dict]): Metadata of the retrieved chunks used as context.
         """
-        # Embed the query into the same vector space as the stored chunks
-        query_embedding = self.embedder.encode([query]).tolist()
-
-        # Retrieve the top-k semantically closest chunks via approximate nearest-neighbour search
-        results = self.collection.query(
-            query_embeddings=query_embedding,  # type: ignore[arg-type]
-            n_results=k
-        )
-
-        # Guard against None — ChromaDB stubs mark these fields as Optional
-        raw_metadatas = results["metadatas"] or [[]]
-        raw_documents = results["documents"] or [[]]
-
-        sources: list[dict[str, Any]] = list(raw_metadatas[0])
-
-        # Join retrieved chunks into a single context block separated by a visual divider
-        context: str = "\n\n--\n\n".join(raw_documents[0])
+        sources, context = self._retrieve(query, k)
 
         prompt = f"""You are a helpful assistant answering questions about a document.
         Use ONLY the context below to answer. If the answer isn't in the context,
@@ -152,10 +149,10 @@ class RAGPipeline:
         )
 
         return {
-            "answer": response.choices[0].message.content.strip(),
+            "answer": (response.choices[0].message.content or "").strip(),
             "sources": sources
         }
-    
+
     def query_with_image(self, query: str, image_bytes: bytes,k: int = 3, use_pdf_context: bool = True) -> dict:
         """Read an image and answer a question about its content.
 
@@ -174,7 +171,7 @@ class RAGPipeline:
 
         # Encode the image to base64
         # We are using Vision API, which accepts images as base64-encoded strings. The encoding is done in-memory without saving to disk.
-        image_b64 = base64. standard_b64encode(image_bytes).decode("utf-8")
+        image_b64 = base64.standard_b64encode(image_bytes).decode("utf-8")
 
         # Detect the image format for the prompt (e.g., "jpeg", "png", "webp")
         # This is a simple heuristic based on common file signatures. For production, consider using a
@@ -189,22 +186,14 @@ class RAGPipeline:
             image_format = "jpeg"  # Default to jpeg if unknown
 
         # optionally retrieve PDF context if requested and available
+        sources: list = []
+        context_block: str = ""
         if use_pdf_context and self.collection.count() > 0:
-            q_embedding = self.embedder.encode([query]).tolist()
-            results = self.collection.query(
-                query_embeddings=q_embedding,  # type: ignore[arg-type]
-                n_results = k
-            )
-        
-            sources = results["metadatas"][0] if results["metadatas"] else []
-            context_block = (
-                "\n\nAdditional context from the uploaded PDF:\n" +
-                "\n---\n".join(results["documents"][0])
-            )
-
+            sources, pdf_context = self._retrieve(query, k)
+            context_block = "\n\nAdditional context from the uploaded PDF:\n" + pdf_context
 
         # Construct the prompt for the vision-capable LLM
-        prompt = """You are a helpful assistant. The user has shared an image with a question.
+        prompt = f"""You are a helpful assistant. The user has shared an image with a question.
 
 First, carefully read ALL content visible in the image:
 - Read every word of text, headings, labels, and captions
@@ -220,9 +209,13 @@ Question: {query}
 
 Answer based on what you see in the image:"""
 
-        # Call the Groq LLM with the image and prompt
+        # VISION MODEL — reads the image and generates an answer via Groq API
+        # Swap the model string below — all available on console.groq.com/docs/models:
+        #   "meta-llama/llama-4-scout-17b-16e-instruct"  → fast,   vision + text, 750 t/sec  (current)
+        #   "meta-llama/llama-4-maverick-17b-128e-instruct" → slower, stronger reasoning, larger context
+        #   "llama-3.2-11b-vision-preview"               → lighter, faster, lower quality
         response = self.groq.chat.completions.create(
-            model="llama-3.2-90b-vision-preview",  
+            model="meta-llama/llama-4-scout-17b-16e-instruct",
             messages=[
                 {
                     "role": "user",
@@ -245,7 +238,7 @@ Answer based on what you see in the image:"""
         )
 
         return {
-            "answer": response.choices[0].message.content.strip(),
+            "answer": (response.choices[0].message.content or "").strip(),
             "sources": sources if use_pdf_context else []
         }
 

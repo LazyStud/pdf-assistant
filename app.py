@@ -71,26 +71,65 @@ else:
     # Replay the full conversation history on each rerun
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
+            
+            # If this message had an image attached, show it above the answer
+            if "image" in msg:
+                st.image(msg["image"], width=280, caption="Attached image")
+
             st.markdown(msg["content"])
             if "sources" in msg:
                 with st.expander("Sources"):
                     for i, source in enumerate(msg["sources"], 1):
                         st.caption(f"[Page {source['page']}] {source['text'][:200]}...")
 
-    if query := st.chat_input("Ask a question about the document"):
-        # Persist and display the user message immediately
-        st.session_state.messages.append({"role": "user", "content": query})
+    uploaded_image = st.file_uploader(
+        "Attach an image (optional)",
+        type=["png", "jpg", "jpeg", "webp"],
+        key="image_uploader",
+    )
+
+    if uploaded_image:
+        st.image(uploaded_image, width=280, caption="Image attached — ask your question below")
+
+    if query := st.chat_input(
+        "Ask about the image..." if uploaded_image else "Ask anything about the document..."
+    ):
+        # Grab the image bytes if an image was uploaded, so we can pass it to the pipeline
+        image_bytes = uploaded_image.getvalue() if uploaded_image else None
+
+        # Display user message immediately, including the attached image if there is one
         with st.chat_message("user"):
+            if image_bytes:
+                st.image(image_bytes, width=280, caption="Attached image")
             st.markdown(query)
+
+        # Save user message before generating — question stays in history
+        # even if generation fails midway
+        user_msg = {"role": "user", "content": query}
+        if image_bytes:
+            user_msg["image"] = image_bytes  # store bytes so image re-renders on rerun
+        st.session_state.messages.append(user_msg)
 
         # Query the pipeline and stream the answer into the assistant bubble
         with st.chat_message("assistant"):
-            with st.spinner("Searching and generating answer..."):
-                response: dict = st.session_state.pipeline.query(query)
+            if image_bytes:
+                # Vision path — model reads the image AND searches the PDF
+                # use_pdf_context=True always, PDF is the whole point of this app 
+                with st.spinner("Searching and generating answer..."):
+                    response: dict = st.session_state.pipeline.query_with_image(
+                        query, 
+                        image_bytes=image_bytes,
+                        use_pdf_context=True
+                    )
+            else:
+                with st.spinner("Searching and generating answer..."):
+                    response: dict = st.session_state.pipeline.query(query)
+                
             st.markdown(response["answer"])
-            with st.expander("Sources"):
-                for i, source in enumerate(response["sources"], 1):
-                    st.caption(f"[Page {source['page']}] - {source['text'][:200]}...")
+            if response["sources"]:
+                with st.expander("Sources"):
+                    for i, source in enumerate(response["sources"], 1):
+                        st.caption(f"[Page {source['page']}] - {source['text'][:200]}...")
 
         # Persist the assistant message including source metadata for history replay
         st.session_state.messages.append({
@@ -98,3 +137,6 @@ else:
             "content": response["answer"],
             "sources": response["sources"],
         })
+
+        # Rerun clears the image uploader so the next message starts fresh
+        st.rerun()

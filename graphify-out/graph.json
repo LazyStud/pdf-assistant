@@ -1,0 +1,751 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "rag_pipeline_retrieval_augmented_generation_flow",
+        "label": "Retrieval-Augmented Generation Flow",
+        "nodes": [
+          "rag_pipeline_ingest",
+          "rag_pipeline_embedder",
+          "rag_pipeline_chroma_collection",
+          "rag_pipeline_splitter",
+          "rag_pipeline_query",
+          "rag_pipeline_text_model"
+        ],
+        "relation": "implement",
+        "confidence": "INFERRED",
+        "confidence_score": 0.95,
+        "source_file": "src/rag_pipeline.py"
+      },
+      {
+        "id": "rag_pipeline_multimodal_query_flow",
+        "label": "Multimodal (Image + PDF Context) Query Flow",
+        "nodes": [
+          "rag_pipeline_query_with_image",
+          "rag_pipeline_embedder",
+          "rag_pipeline_chroma_collection",
+          "rag_pipeline_vision_model",
+          "rag_pipeline_groq_client"
+        ],
+        "relation": "implement",
+        "confidence": "INFERRED",
+        "confidence_score": 0.9,
+        "source_file": "src/rag_pipeline.py"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "rag_pipeline.py",
+      "file_type": "code",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L1",
+      "id": "rag_pipeline_py",
+      "community": 2,
+      "norm_label": "rag_pipeline.py"
+    },
+    {
+      "label": "RAGPipeline",
+      "file_type": "code",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L16",
+      "id": "src_rag_pipeline_ragpipeline",
+      "community": 0,
+      "norm_label": "ragpipeline"
+    },
+    {
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L17",
+      "id": "src_rag_pipeline_ragpipeline_init",
+      "community": 0,
+      "norm_label": ".__init__()"
+    },
+    {
+      "label": ".ingest()",
+      "file_type": "code",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L46",
+      "id": "src_rag_pipeline_ragpipeline_ingest",
+      "community": 0,
+      "norm_label": ".ingest()"
+    },
+    {
+      "label": ".query()",
+      "file_type": "code",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L97",
+      "id": "src_rag_pipeline_ragpipeline_query",
+      "community": 0,
+      "norm_label": ".query()"
+    },
+    {
+      "label": ".query_with_image()",
+      "file_type": "code",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L159",
+      "id": "src_rag_pipeline_ragpipeline_query_with_image",
+      "community": 0,
+      "norm_label": ".query_with_image()"
+    },
+    {
+      "label": "RAG pipeline for PDF question-answering using ChromaDB, SentenceTransformers, an",
+      "file_type": "rationale",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L1",
+      "id": "src_rag_pipeline_rationale_1",
+      "community": 2,
+      "norm_label": "rag pipeline for pdf question-answering using chromadb, sentencetransformers, an"
+    },
+    {
+      "label": "Initialize the RAG pipeline: LLM client, embedding model, vector store, and text",
+      "file_type": "rationale",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L18",
+      "id": "src_rag_pipeline_rationale_18",
+      "community": 0,
+      "norm_label": "initialize the rag pipeline: llm client, embedding model, vector store, and text"
+    },
+    {
+      "label": "Extract text from a PDF, split into chunks, embed, and store in ChromaDB.",
+      "file_type": "rationale",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L47",
+      "id": "src_rag_pipeline_rationale_47",
+      "community": 0,
+      "norm_label": "extract text from a pdf, split into chunks, embed, and store in chromadb."
+    },
+    {
+      "label": "Embed a user query, retrieve the most relevant chunks, and generate an LLM answe",
+      "file_type": "rationale",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L98",
+      "id": "src_rag_pipeline_rationale_98",
+      "community": 0,
+      "norm_label": "embed a user query, retrieve the most relevant chunks, and generate an llm answe"
+    },
+    {
+      "label": "Read an image and answer a question about its content.          Args:",
+      "file_type": "rationale",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L160",
+      "id": "src_rag_pipeline_rationale_160",
+      "community": 0,
+      "norm_label": "read an image and answer a question about its content.          args:"
+    },
+    {
+      "label": "# NOTE: whatever model you set here MUST match the one used in query() below",
+      "file_type": "rationale",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L29",
+      "id": "src_rag_pipeline_rationale_29",
+      "community": 2,
+      "norm_label": "# note: whatever model you set here must match the one used in query() below"
+    },
+    {
+      "label": "RAGPipeline",
+      "file_type": "code",
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "16",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "rag_pipeline_ragpipeline",
+      "community": 4,
+      "norm_label": "ragpipeline"
+    },
+    {
+      "label": "RAGPipeline.__init__",
+      "file_type": "code",
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "17",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "rag_pipeline_init",
+      "community": 4,
+      "norm_label": "ragpipeline.__init__"
+    },
+    {
+      "label": "RAGPipeline.ingest",
+      "file_type": "code",
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "46",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "rag_pipeline_ingest",
+      "community": 1,
+      "norm_label": "ragpipeline.ingest"
+    },
+    {
+      "label": "RAGPipeline.query",
+      "file_type": "code",
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "97",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "rag_pipeline_query",
+      "community": 1,
+      "norm_label": "ragpipeline.query"
+    },
+    {
+      "label": "RAGPipeline.query_with_image",
+      "file_type": "code",
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "159",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "rag_pipeline_query_with_image",
+      "community": 3,
+      "norm_label": "ragpipeline.query_with_image"
+    },
+    {
+      "label": "Groq LLM Client",
+      "file_type": "code",
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "20",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "rag_pipeline_groq_client",
+      "community": 4,
+      "norm_label": "groq llm client"
+    },
+    {
+      "label": "SentenceTransformer Embedder (all-MiniLM-L6-v2)",
+      "file_type": "code",
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "30",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "rag_pipeline_embedder",
+      "community": 1,
+      "norm_label": "sentencetransformer embedder (all-minilm-l6-v2)"
+    },
+    {
+      "label": "ChromaDB Collection (pdf_chunks, cosine)",
+      "file_type": "code",
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "34",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "rag_pipeline_chroma_collection",
+      "community": 6,
+      "norm_label": "chromadb collection (pdf_chunks, cosine)"
+    },
+    {
+      "label": "RecursiveCharacterTextSplitter (500/50)",
+      "file_type": "code",
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "40",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "rag_pipeline_splitter",
+      "community": 5,
+      "norm_label": "recursivecharactertextsplitter (500/50)"
+    },
+    {
+      "label": "Cosine Similarity for Text Embeddings",
+      "file_type": "rationale",
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "37",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Cosine similarity chosen over Euclidean for vector search because it measures directional alignment of text embedding vectors, making it invariant to magnitude and better suited for semantic similarity of text.",
+      "id": "rag_pipeline_cosine_similarity",
+      "community": 6,
+      "norm_label": "cosine similarity for text embeddings"
+    },
+    {
+      "label": "Chunk Overlap Strategy (50-char overlap)",
+      "file_type": "rationale",
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "39",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "50-char overlap between 500-char chunks preserves sentence context across chunk boundaries, reducing loss of meaning at split points.",
+      "id": "rag_pipeline_chunk_overlap",
+      "community": 5,
+      "norm_label": "chunk overlap strategy (50-char overlap)"
+    },
+    {
+      "label": "Image Format Detection Heuristic",
+      "file_type": "rationale",
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "182",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Simple byte-signature heuristic used to detect JPEG/PNG/WEBP; noted as simplistic with recommendation for python-magic in production.",
+      "id": "rag_pipeline_image_format_detection",
+      "community": 3,
+      "norm_label": "image format detection heuristic"
+    },
+    {
+      "label": "Vision LLM (llama-4-scout-17b)",
+      "file_type": "code",
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "231",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "rag_pipeline_vision_model",
+      "community": 3,
+      "norm_label": "vision llm (llama-4-scout-17b)"
+    },
+    {
+      "label": "Text LLM (llama-3.1-8b-instant)",
+      "file_type": "code",
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "147",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "rag_pipeline_text_model",
+      "community": 1,
+      "norm_label": "text llm (llama-3.1-8b-instant)"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "rag_pipeline_py",
+      "target": "src_rag_pipeline_ragpipeline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_rag_pipeline_rationale_1",
+      "target": "rag_pipeline_py",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "src_rag_pipeline_rationale_29",
+      "target": "rag_pipeline_py",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "src_rag_pipeline_ragpipeline",
+      "target": "src_rag_pipeline_ragpipeline_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "src_rag_pipeline_ragpipeline",
+      "target": "src_rag_pipeline_ragpipeline_ingest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "src_rag_pipeline_ragpipeline",
+      "target": "src_rag_pipeline_ragpipeline_query",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L159",
+      "weight": 1.0,
+      "source": "src_rag_pipeline_ragpipeline",
+      "target": "src_rag_pipeline_ragpipeline_query_with_image",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "src_rag_pipeline_rationale_18",
+      "target": "src_rag_pipeline_ragpipeline_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "src_rag_pipeline_rationale_47",
+      "target": "src_rag_pipeline_ragpipeline_ingest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L196",
+      "weight": 1.0,
+      "source": "src_rag_pipeline_ragpipeline_query_with_image",
+      "target": "src_rag_pipeline_ragpipeline_query",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L98",
+      "weight": 1.0,
+      "source": "src_rag_pipeline_rationale_98",
+      "target": "src_rag_pipeline_ragpipeline_query",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "rag_pipeline.py",
+      "source_location": "L160",
+      "weight": 1.0,
+      "source": "src_rag_pipeline_rationale_160",
+      "target": "src_rag_pipeline_ragpipeline_query_with_image",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "17",
+      "weight": 1.0,
+      "source": "rag_pipeline_ragpipeline",
+      "target": "rag_pipeline_init"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "46",
+      "weight": 1.0,
+      "source": "rag_pipeline_ragpipeline",
+      "target": "rag_pipeline_ingest"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "97",
+      "weight": 1.0,
+      "source": "rag_pipeline_ragpipeline",
+      "target": "rag_pipeline_query"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "159",
+      "weight": 1.0,
+      "source": "rag_pipeline_ragpipeline",
+      "target": "rag_pipeline_query_with_image"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "20",
+      "weight": 1.0,
+      "source": "rag_pipeline_init",
+      "target": "rag_pipeline_groq_client"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "30",
+      "weight": 1.0,
+      "source": "rag_pipeline_init",
+      "target": "rag_pipeline_embedder"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "33",
+      "weight": 1.0,
+      "source": "rag_pipeline_init",
+      "target": "rag_pipeline_chroma_collection"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "40",
+      "weight": 1.0,
+      "source": "rag_pipeline_init",
+      "target": "rag_pipeline_splitter"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "72",
+      "weight": 1.0,
+      "source": "rag_pipeline_ingest",
+      "target": "rag_pipeline_splitter"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "85",
+      "weight": 1.0,
+      "source": "rag_pipeline_ingest",
+      "target": "rag_pipeline_embedder"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "88",
+      "weight": 1.0,
+      "source": "rag_pipeline_ingest",
+      "target": "rag_pipeline_chroma_collection"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "rag_pipeline_ingest",
+      "target": "rag_pipeline_query"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "rag_pipeline_ingest",
+      "target": "rag_pipeline_query_with_image"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "109",
+      "weight": 1.0,
+      "source": "rag_pipeline_query",
+      "target": "rag_pipeline_embedder"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "112",
+      "weight": 1.0,
+      "source": "rag_pipeline_query",
+      "target": "rag_pipeline_chroma_collection"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "147",
+      "weight": 1.0,
+      "source": "rag_pipeline_query",
+      "target": "rag_pipeline_text_model"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "147",
+      "weight": 1.0,
+      "source": "rag_pipeline_query",
+      "target": "rag_pipeline_groq_client"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": null,
+      "weight": 0.85,
+      "source": "rag_pipeline_query",
+      "target": "rag_pipeline_query_with_image"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "195",
+      "weight": 1.0,
+      "source": "rag_pipeline_query_with_image",
+      "target": "rag_pipeline_embedder"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "196",
+      "weight": 1.0,
+      "source": "rag_pipeline_query_with_image",
+      "target": "rag_pipeline_chroma_collection"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "230",
+      "weight": 1.0,
+      "source": "rag_pipeline_query_with_image",
+      "target": "rag_pipeline_vision_model"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "230",
+      "weight": 1.0,
+      "source": "rag_pipeline_query_with_image",
+      "target": "rag_pipeline_groq_client"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "182",
+      "weight": 1.0,
+      "source": "rag_pipeline_query_with_image",
+      "target": "rag_pipeline_image_format_detection"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "37",
+      "weight": 1.0,
+      "source": "rag_pipeline_chroma_collection",
+      "target": "rag_pipeline_cosine_similarity"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": "40",
+      "weight": 1.0,
+      "source": "rag_pipeline_splitter",
+      "target": "rag_pipeline_chunk_overlap"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "src/rag_pipeline.py",
+      "source_location": null,
+      "weight": 0.75,
+      "source": "rag_pipeline_text_model",
+      "target": "rag_pipeline_vision_model"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "rag_pipeline_retrieval_augmented_generation_flow",
+      "label": "Retrieval-Augmented Generation Flow",
+      "nodes": [
+        "rag_pipeline_ingest",
+        "rag_pipeline_embedder",
+        "rag_pipeline_chroma_collection",
+        "rag_pipeline_splitter",
+        "rag_pipeline_query",
+        "rag_pipeline_text_model"
+      ],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/rag_pipeline.py"
+    },
+    {
+      "id": "rag_pipeline_multimodal_query_flow",
+      "label": "Multimodal (Image + PDF Context) Query Flow",
+      "nodes": [
+        "rag_pipeline_query_with_image",
+        "rag_pipeline_embedder",
+        "rag_pipeline_chroma_collection",
+        "rag_pipeline_vision_model",
+        "rag_pipeline_groq_client"
+      ],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/rag_pipeline.py"
+    }
+  ],
+  "built_at_commit": "a4258476832ff4405df7b491614e6cfb2ec8f4d7"
+}
