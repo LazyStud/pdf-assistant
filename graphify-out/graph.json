@@ -42,7 +42,7 @@
       "file_type": "code",
       "source_file": "rag_pipeline.py",
       "source_location": "L1",
-      "community": 4,
+      "community": 2,
       "norm_label": "rag_pipeline.py",
       "id": "rag_pipeline_py"
     },
@@ -96,7 +96,7 @@
       "file_type": "rationale",
       "source_file": "rag_pipeline.py",
       "source_location": "L1",
-      "community": 4,
+      "community": 2,
       "norm_label": "rag pipeline for pdf question-answering using chromadb, sentencetransformers, an",
       "id": "src_rag_pipeline_rationale_1"
     },
@@ -141,7 +141,7 @@
       "file_type": "rationale",
       "source_file": "rag_pipeline.py",
       "source_location": "L29",
-      "community": 4,
+      "community": 2,
       "norm_label": "# note: whatever model you set here must match the one used in query() below",
       "id": "src_rag_pipeline_rationale_29"
     },
@@ -154,7 +154,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 4,
       "norm_label": "ragpipeline",
       "id": "rag_pipeline_ragpipeline"
     },
@@ -167,7 +167,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "ragpipeline.__init__",
       "id": "rag_pipeline_init"
     },
@@ -180,7 +180,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 1,
       "norm_label": "ragpipeline.ingest",
       "id": "rag_pipeline_ingest"
     },
@@ -193,7 +193,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 1,
       "norm_label": "ragpipeline.query",
       "id": "rag_pipeline_query"
     },
@@ -206,7 +206,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 3,
       "norm_label": "ragpipeline.query_with_image",
       "id": "rag_pipeline_query_with_image"
     },
@@ -219,7 +219,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 4,
       "norm_label": "groq llm client",
       "id": "rag_pipeline_groq_client"
     },
@@ -232,7 +232,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 1,
       "norm_label": "sentencetransformer embedder (all-minilm-l6-v2)",
       "id": "rag_pipeline_embedder"
     },
@@ -245,7 +245,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 6,
       "norm_label": "chromadb collection (pdf_chunks, cosine)",
       "id": "rag_pipeline_chroma_collection"
     },
@@ -272,7 +272,7 @@
       "author": null,
       "contributor": null,
       "rationale": "Cosine similarity chosen over Euclidean for vector search because it measures directional alignment of text embedding vectors, making it invariant to magnitude and better suited for semantic similarity of text.",
-      "community": 3,
+      "community": 6,
       "norm_label": "cosine similarity for text embeddings",
       "id": "rag_pipeline_cosine_similarity"
     },
@@ -300,7 +300,7 @@
       "author": null,
       "contributor": null,
       "rationale": "Simple byte-signature heuristic used to detect JPEG/PNG/WEBP; noted as simplistic with recommendation for python-magic in production.",
-      "community": 1,
+      "community": 3,
       "norm_label": "image format detection heuristic",
       "id": "rag_pipeline_image_format_detection"
     },
@@ -313,7 +313,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 3,
       "norm_label": "vision llm (llama-4-scout-17b)",
       "id": "rag_pipeline_vision_model"
     },
@@ -747,5 +747,5 @@
       "source_file": "src/rag_pipeline.py"
     }
   ],
-  "built_at_commit": "4c7874b5e5eb9b205d4096f3e243285f13f5c382"
+  "built_at_commit": "238bdb2c691e22eca60a89da2835eb5f5c87a787"
 }
