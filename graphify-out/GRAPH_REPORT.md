@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `238bdb2c`
+- Built from commit: `71ca0b57`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -38,14 +38,14 @@
 ## Surprising Connections (you probably didn't know these)
 - `RAGPipeline.ingest` --shares_data_with--> `RAGPipeline.query_with_image`  [INFERRED]
   src/rag_pipeline.py → src/rag_pipeline.py  _Bridges community 1 → community 3_
-- `RAGPipeline` --implements--> `RAGPipeline.ingest`  [EXTRACTED]
-  src/rag_pipeline.py → src/rag_pipeline.py  _Bridges community 4 → community 1_
-- `RAGPipeline` --implements--> `RAGPipeline.query_with_image`  [EXTRACTED]
-  src/rag_pipeline.py → src/rag_pipeline.py  _Bridges community 4 → community 3_
+- `RAGPipeline` --implements--> `RAGPipeline.__init__`  [EXTRACTED]
+  src/rag_pipeline.py → src/rag_pipeline.py  _Bridges community 1 → community 4_
 - `RAGPipeline.__init__` --calls--> `ChromaDB Collection (pdf_chunks, cosine)`  [EXTRACTED]
   src/rag_pipeline.py → src/rag_pipeline.py  _Bridges community 4 → community 6_
 - `RAGPipeline.__init__` --calls--> `RecursiveCharacterTextSplitter (500/50)`  [EXTRACTED]
   src/rag_pipeline.py → src/rag_pipeline.py  _Bridges community 4 → community 5_
+- `RAGPipeline.ingest` --calls--> `RecursiveCharacterTextSplitter (500/50)`  [EXTRACTED]
+  src/rag_pipeline.py → src/rag_pipeline.py  _Bridges community 1 → community 5_
 
 ## Hyperedges (group relationships)
 - **Retrieval-Augmented Generation Flow** — rag_pipeline_ingest, rag_pipeline_embedder, rag_pipeline_chroma_collection, rag_pipeline_splitter, rag_pipeline_query, rag_pipeline_text_model [INFERRED 0.95]
@@ -59,7 +59,7 @@ Nodes (5): RAGPipeline, Read an image and answer a question about its content.  
 
 ### Community 1 - "Text Query & Embedding"
 Cohesion: 0.67
-Nodes (4): SentenceTransformer Embedder (all-MiniLM-L6-v2), RAGPipeline.ingest, RAGPipeline.query, Text LLM (llama-3.1-8b-instant)
+Nodes (4): RAGPipeline.ingest, RAGPipeline.query, RAGPipeline, Text LLM (llama-3.1-8b-instant)
 
 ### Community 3 - "Vision Query & Image Handling"
 Cohesion: 0.67
@@ -67,7 +67,7 @@ Nodes (3): Image Format Detection Heuristic, RAGPipeline.query_with_image, Visio
 
 ### Community 4 - "Groq LLM Client & Init"
 Cohesion: 0.67
-Nodes (3): Groq LLM Client, RAGPipeline.__init__, RAGPipeline
+Nodes (3): SentenceTransformer Embedder (all-MiniLM-L6-v2), Groq LLM Client, RAGPipeline.__init__
 
 ## Knowledge Gaps
 - **9 isolated node(s):** `RAG pipeline for PDF question-answering using ChromaDB, SentenceTransformers, an`, `Initialize the RAG pipeline: LLM client, embedding model, vector store, and text`, `Extract text from a PDF, split into chunks, embed, and store in ChromaDB.`, `Embed a user query, retrieve the most relevant chunks, and generate an LLM answe`, `Read an image and answer a question about its content.          Args:` (+4 more)

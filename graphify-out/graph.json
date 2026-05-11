@@ -154,7 +154,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 1,
       "norm_label": "ragpipeline",
       "id": "rag_pipeline_ragpipeline"
     },
@@ -232,7 +232,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 4,
       "norm_label": "sentencetransformer embedder (all-minilm-l6-v2)",
       "id": "rag_pipeline_embedder"
     },
@@ -747,5 +747,5 @@
       "source_file": "src/rag_pipeline.py"
     }
   ],
-  "built_at_commit": "238bdb2c691e22eca60a89da2835eb5f5c87a787"
+  "built_at_commit": "71ca0b57e8fd568eba635bfd95ccb4838ee1125b"
 }
