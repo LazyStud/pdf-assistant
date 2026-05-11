@@ -5,5 +5,4 @@ __pycache__/
 chroma_db/
 .vscode/
 .graphifyignore
-graphify-out/manifest.json
-graphify-out/cost.json
+graphify-out/

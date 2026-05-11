@@ -52,8 +52,13 @@ class RAGPipeline:
         Raises:
             ValueError: If GROQ_API_KEY is missing from the environment / .env file.
         """
+        api_key = os.getenv("GROQ_API_KEY")
+        if not api_key:
+            raise ValueError(
+                "GROQ_API_KEY is not set. Add it to your .env file or export it as an environment variable."
+            )
         # Groq client — requires GROQ_API_KEY set in .env (see README)
-        self.groq = Groq(api_key=os.getenv("GROQ_API_KEY"))
+        self.groq = Groq(api_key=api_key)
 
         # LOCAL EMBEDDING MODEL — converts text chunks and queries to 384-d float vectors.
         # Runs entirely on CPU; no API key or internet connection required after first download.
@@ -126,6 +131,9 @@ class RAGPipeline:
                     "text": chunk,     # shown as the 200-char preview beneath the citation
                 })
                 ids.append(f"p{page_num}_c{j}")
+
+        if not chunks:
+            return 0
 
         # Encode all chunks in one call — batch encoding is ~10x faster than encoding one at a time.
         # Output shape: (num_chunks, 384). .tolist() converts numpy ndarray → plain Python list
@@ -227,7 +235,7 @@ class RAGPipeline:
         image_bytes: bytes,
         k: int = 3,
         use_pdf_context: bool = True,
-    ) -> dict:
+    ) -> dict[str, Any]:
         """Answer a question about an image, optionally grounded by PDF context.
 
         The image is base64-encoded in-memory (never written to disk) and sent to
@@ -268,7 +276,7 @@ class RAGPipeline:
             image_format = "jpeg"  # safe fallback; Groq rejects unknown types gracefully
 
         # Optionally pull relevant PDF passages to give the vision model document context.
-        sources: list = []
+        sources: list[dict[str, Any]] = []
         context_block: str = ""
         if use_pdf_context and self.collection.count() > 0:
             sources, pdf_context = self._retrieve(query, k)

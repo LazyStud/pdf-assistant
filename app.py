@@ -66,10 +66,12 @@ with st.sidebar:
                 tmp_file_path: str = tmp_file.name
 
             pipeline = RAGPipeline()
-            chunk_count: int = pipeline.ingest(tmp_file_path)
+            try:
+                chunk_count: int = pipeline.ingest(tmp_file_path)
+            finally:
+                os.unlink(tmp_file_path)    # clean up temp file; all data is now in ChromaDB
             st.session_state.pipeline = pipeline
             st.session_state.messages = []  # clear history — new document, fresh conversation
-            os.unlink(tmp_file_path)        # clean up temp file; all data is now in ChromaDB
 
         st.success(f"PDF processed successfully! Total chunks created: {chunk_count}")
 
